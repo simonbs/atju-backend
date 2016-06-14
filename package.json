@@ -1,0 +1,33 @@
+{
+  "name": "atju-backend",
+  "version": "1.0.0",
+  "description": "Polls for pollen readings from DMI and stores them.",
+  "repository": "git@github.com:simonbs/atju-backend.git",
+  "main": "app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "start-dev": "export NODE_ENV=development; nodemon src/app.js",
+    "refresh": "node scripts/refresh.js"
+  },
+  "keywords": [
+    "pollen",
+    "grass",
+    "allergy",
+    "atju",
+    "sneeze",
+    "summer"
+  ],
+  "author": "Simon B. Støvring",
+  "license": "ISC",
+  "dependencies": {
+    "config": "^1.21.0",
+    "cron": "^1.1.0",
+    "express": "^4.13.4",
+    "feedparser": "^1.1.4",
+    "moment": "^2.13.0",
+    "pg": "^5.1.0",
+    "request": "^2.72.0",
+    "sequelize": "^3.23.3",
+    "underscore": "^1.8.3"
+  }
+}

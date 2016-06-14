@@ -1,0 +1,9 @@
+var path = require('path');
+
+module.exports = {
+  'config': path.resolve('src', 'lib', 'sequelize.js'),
+  'migrations-path': path.resolve('db', 'migrations'),
+  'models-path': path.resolve('src', 'models'),
+  'seeders-path': path.resolve('db', 'seeders'),
+  'migrationStorageTableName': 'sequelize_meta'
+}
