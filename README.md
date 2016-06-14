@@ -10,3 +10,5 @@ In order to run the app, you should first install the dependencies using `npm in
 - Run the app in a production environment using `npm start`.
 
 The app will poll DMI for new pollen readings every 15 minute when run in a production environment. When running in a development environment, you can run `npm run refresh` to poll for new readings.
+
+I recommend deploying the app using [PM2](https://github.com/Unitech/pm2).
