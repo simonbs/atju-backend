@@ -5,6 +5,10 @@ var moment = require('moment');
 
 function PollenStore() {}
 
+PollenStore.prototype.load = function(done) {
+  done(new Error('Not implemented yet.'), null);
+}
+
 PollenStore.prototype.refresh = function(done) {
   var dmi = new DMI();
   dmi.getPollen(function(err, pollenEntries) {
