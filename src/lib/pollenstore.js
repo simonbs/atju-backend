@@ -30,18 +30,18 @@ function storePollenData(pollenEntries, done) {
 }
 
 function storeTypes(pollenEntry, city, done) {
-  async.forEach(pollenEntry.types, function(rawType, callback) {
+  async.forEach(pollenEntry.types, function(rawPollenType, callback) {
     models.PollenType
-          .findOrCreate({ where: { name: pollenEntry.name } })
+          .findOrCreate({ where: { name: rawPollenType.name } })
           .spread(function(pollenType, pollenTypeCreated) {
-            storeValue(pollenEntry, city, pollenType, callback);
+            storeValue(pollenEntry, rawPollenType, city, pollenType, callback);
           }).catch(function(err) {
             callback(err);
           });
   }, done);
 }
 
-function storeValue(pollenEntry, city, pollenType, done) {
+function storeValue(pollenEntry, rawPollenType, city, pollenType, done) {
   var date = moment(pollenEntry.date).toDate();
   models.PollenValue
         .findOrCreate({
@@ -51,7 +51,9 @@ function storeValue(pollenEntry, city, pollenType, done) {
             pollen_type_id: pollenType.id
           }
         }).spread(function(pollenValue, pollenValueCreated) {
-          done();
+          pollenValue.update({ value: rawPollenType.value })
+                     .then(function() { done() })
+                     .catch(done);
         }).catch(done);
 }
 
