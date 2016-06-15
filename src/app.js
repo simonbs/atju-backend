@@ -22,7 +22,7 @@ models.sequelize.sync().then(function() {
     var jobs = new Jobs();
     jobs.start();
   } else {
-    console.log('Not starting jobs in development environment.');
+    console.log('Not starting jobs in environment: ' + process.env.NODE_ENV + '.');
   }
 });
 
