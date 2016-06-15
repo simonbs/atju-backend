@@ -6,7 +6,43 @@ var moment = require('moment');
 function PollenStore() {}
 
 PollenStore.prototype.load = function(done) {
-  done(new Error('Not implemented yet.'), null);
+  models.sequelize.query('select "Cities".name as city, "PollenTypes".name as pollen_type, value, published_at\
+    from "PollenValues"\
+    inner join "Cities" on ("PollenValues".city_id = "Cities".id)\
+    inner join "PollenTypes" on ("PollenValues".pollen_Type_id = "PollenTypes".id)\
+    where date(published_at) in (\
+      select distinct on (published_at) date(published_at) as published_at\
+      from "PollenValues"\
+      order by published_at\
+      limit 2\
+    )\
+    order by published_at desc, city asc;').spread(function(results, metadata) {
+      var latest = {};
+      var previous = {};
+      var latest_date = null;
+      results.forEach(function(result) {
+        // Please note that the grouping of entries are dependent on the
+        // order used in the query.
+        if (latest_date == null) {
+          latest_date = result.published_at;
+        }
+
+        var group = result.published_at.toString() == latest_date.toString() ? latest : previous;       
+        group['date'] = result.published_at;
+        var city_group = group[result.city] || [];
+        city_group.push({
+          pollen_type: result.pollen_type,
+          value: result.value
+        });
+        group[result.city] = city_group;
+      });      
+      done(null, {
+        "latest": latest,
+        "previous": previous
+      });
+    }).catch(function(err) {
+      done(err, null)
+    });
 }
 
 PollenStore.prototype.refresh = function(done) {
