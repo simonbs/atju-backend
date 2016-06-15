@@ -6,17 +6,29 @@ var moment = require('moment');
 function PollenStore() {}
 
 PollenStore.prototype.load = function(done) {
-  models.sequelize.query('select "Cities".name as city, "PollenTypes".name as pollen_type, value, published_at\
+  var query = 'select "Cities".name as city,\
+      "PollenTypes".name as pollen_type,\
+      value,\
+      "PollenValues".published_at,\
+       "Prognoses".text as prognose\
     from "PollenValues"\
-    inner join "Cities" on ("PollenValues".city_id = "Cities".id)\
-    inner join "PollenTypes" on ("PollenValues".pollen_Type_id = "PollenTypes".id)\
-    where date(published_at) in (\
-      select distinct on (published_at) date(published_at) as published_at\
+    inner join "Cities" on (\
+      "PollenValues".city_id = "Cities".id\
+    )\
+    inner join "PollenTypes" on (\
+      "PollenValues".pollen_type_id = "PollenTypes".id\
+    )\
+    left outer join "Prognoses" on (\
+      "PollenValues".city_id = "Prognoses".city_id and\
+      "PollenValues".published_at = "Prognoses".published_at)\
+    where date("PollenValues".published_at) in (\
+      select distinct on ("PollenValues".published_at) date("PollenValues".published_at) as published_at\
       from "PollenValues"\
-      order by published_at\
+      order by "PollenValues".published_at\
       limit 2\
     )\
-    order by published_at desc, city asc;').spread(function(results, metadata) {
+    order by "PollenValues".published_at desc, city asc;';
+  models.sequelize.query(query).spread(function(results, metadata) {
       var latest = {};
       var previous = {};
       var latest_date = null;
@@ -27,8 +39,9 @@ PollenStore.prototype.load = function(done) {
           latest_date = result.published_at;
         }
 
-        var group = result.published_at.toString() == latest_date.toString() ? latest : previous;       
+        var group = result.published_at.toString() == latest_date.toString() ? latest : previous;
         group['date'] = result.published_at;
+        group['prognose'] = result.prognose;
         var city_group = group[result.city] || [];
         city_group.push({
           pollen_type: result.pollen_type,
@@ -58,11 +71,29 @@ function storePollenData(pollenEntries, done) {
     models.City
           .findOrCreate({ where: { name: pollenEntry.city } })
           .spread(function(city, cityCreated) {
-            storeTypes(pollenEntry, city, callback);
+            storePrognoses(pollenEntry, city, function(err) {
+              if (err) { return callback(err); }
+              storeTypes(pollenEntry, city, callback);
+            });
           }).catch(function(err) {
             callback(err);
           });
   }, done);  
+}
+
+function storePrognoses(pollenEntry, city, done) {
+  models.Prognose
+        .findOrCreate({
+          where: {
+            published_at: pollenEntry.date,
+            city_id: city.id
+          }
+        })
+        .spread(function(prognose, prognoseCreated) {
+          prognose.update({ text: pollenEntry.prognose })
+                  .then(function() { done() })
+                  .catch(done);
+        }).catch(done);
 }
 
 function storeTypes(pollenEntry, city, done) {
