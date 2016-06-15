@@ -2,6 +2,7 @@ var async = require('async');
 var DMI = require('./dmi');
 var models = require('./../models');
 var moment = require('moment');
+var _ = require('underscore');
 
 function PollenStore() {}
 
@@ -42,12 +43,24 @@ PollenStore.prototype.load = function(done) {
         var group = result.published_at.toString() == latest_date.toString() ? latest : previous;
         group['date'] = result.published_at;
         group['prognose'] = result.prognose;
-        var city_group = group[result.city] || [];
-        city_group.push({
-          pollen_type: result.pollen_type,
+        var cities = group['cities'] || [];
+        var cityIdx = _.findIndex(cities, function(city) {
+          return city.name == result.city
+        });
+        var city = cityIdx != -1 ? cities[cityIdx] : {};
+        city['name'] = result.city;
+        var readings = city['readings'] || [];
+        readings.push({
+          name: result.pollen_type,
           value: result.value
         });
-        group[result.city] = city_group;
+        city['readings'] = readings;
+        if (cityIdx != -1) {
+          cities[cityIdx] = city;
+        } else {
+          cities.push(city);
+        }
+        group['cities'] = cities;
       });      
       done(null, {
         "latest": latest,
