@@ -78,7 +78,6 @@ function extractPollenTypes(rawTypes) {
        var comps = val.split(': ');
        var name = comps[0];
        var value = comps[1].substring(0, comps[1].length - 1);
-       value = value == "-" ? 0 : parseInt(value);
        return {
          name: comps[0],
          value: value

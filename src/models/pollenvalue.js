@@ -1,7 +1,7 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
   var PollenValue = sequelize.define('PollenValue', {
-    value: DataTypes.INTEGER,
+    value: DataTypes.STRING,
     published_at: DataTypes.DATE
   }, {
     classMethods: {
