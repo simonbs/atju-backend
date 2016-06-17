@@ -25,7 +25,7 @@ PollenStore.prototype.load = function(done) {
     where date("PollenValues".published_at) in (\
       select distinct on ("PollenValues".published_at) date("PollenValues".published_at) as published_at\
       from "PollenValues"\
-      order by "PollenValues".published_at\
+      order by "PollenValues".published_at desc\
       limit 2\
     )\
     order by "PollenValues".published_at desc, city asc;';
