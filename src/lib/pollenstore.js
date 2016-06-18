@@ -6,6 +6,26 @@ var _ = require('underscore');
 
 function PollenStore() {}
 
+PollenStore.prototype.loadHistory = function(date, pollenType, city, done) {
+  var query = 'select value, "Cities".name, "PollenTypes".name, published_at\
+    from "PollenValues"\
+    inner join "Cities" on (\
+       "PollenValues".city_id = "Cities".id\
+     )\
+     inner join "PollenTypes" on (\
+       "PollenValues".pollen_type_id = "PollenTypes".id\
+     )\
+    where published_at >= ? and "PollenTypes".name = ? and "Cities".name = ?\
+    order by "PollenValues".published_at desc;';
+  models.sequelize.query(query, {
+    replacements: [ date, pollenType, city ]
+  }).spread(function(results, metadata) {
+    done(null, results);
+  }).catch(function(err) {
+    done(err, null)
+  });
+}
+
 PollenStore.prototype.load = function(done) {
   var query = 'select "Cities".name as city,\
       "PollenTypes".name as pollen_type,\
