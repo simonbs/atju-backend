@@ -1,5 +1,13 @@
 {
   "database": {
     "url": "postgres://localhost/atju"
+  },
+  "notifications": {
+    "new_available": "Dagens pollental er tilgængelige.",
+    "urban_airship": {
+      "api_key": "",
+      "api_secret": "",
+      "api_master_key": ""
+    }
   }
 }

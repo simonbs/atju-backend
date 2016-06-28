@@ -3,6 +3,7 @@ var DMI = require('./dmi');
 var models = require('./../models');
 var moment = require('moment');
 var _ = require('underscore');
+var Notifier = require('./notifier');
 
 function PollenStore() {}
 
@@ -123,9 +124,14 @@ function storePrognoses(pollenEntry, city, done) {
           }
         })
         .spread(function(prognose, prognoseCreated) {
+          if (prognoseCreated) {
+            var notifier = new Notifier();
+            notifier.sendNotification();
+          }
+
           prognose.update({ text: pollenEntry.prognose })
-                  .then(function() { done() })
-                  .catch(done);
+                    .then(function() { done() })
+                    .catch(done);
         }).catch(done);
 }
 
