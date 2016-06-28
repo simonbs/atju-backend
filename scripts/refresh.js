@@ -1,9 +1,9 @@
 var models = require('../src/models');
-var PollenStore = require('../src/lib/pollenstore');
-var pollenStore = new PollenStore();
+var Refresher = require('../src/lib/refresher');
 
 models.sequelize.sync().then(function() {
-  pollenStore.refresh(function(err) {
+  var refresher = new Refresher();
+  refresher.refresh(function(err) {
     if (err) { return console.log('Failed refresh: ' + err); }
     console.log('Did refresh');
   });

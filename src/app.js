@@ -18,11 +18,11 @@ models.sequelize.sync().then(function() {
   app.listen(port);
   console.log('Listening on port ' + port + '...');
 
-  if (process.env.NODE_ENV && process.env.NODE_ENV != 'development') {
+  /* if (process.env.NODE_ENV && process.env.NODE_ENV != 'development') { */
     var jobs = new Jobs();
     jobs.start();
-  } else {
-    console.log('Not starting jobs in environment: ' + process.env.NODE_ENV + '.');
-  }
+  /* } else {
+     console.log('Not starting jobs in environment: ' + process.env.NODE_ENV + '.');
+     } */
 });
 

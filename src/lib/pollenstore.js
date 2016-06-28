@@ -3,7 +3,6 @@ var DMI = require('./dmi');
 var models = require('./../models');
 var moment = require('moment');
 var _ = require('underscore');
-var Notifier = require('./notifier');
 
 function PollenStore() {}
 
@@ -94,9 +93,19 @@ PollenStore.prototype.load = function(done) {
 
 PollenStore.prototype.refresh = function(done) {
   var dmi = new DMI();
-  dmi.getPollen(function(err, pollenEntries) {
-    if (err) { return done(err); }
-    storePollenData(pollenEntries, done);
+  hasStoredValuesToday(function(err, hadStoredValues) {
+    if (err) { return done(err, false); }
+    dmi.getPollen(function(err, pollenEntries) {
+      if (err) { return done(err, false); }
+      storePollenData(pollenEntries, function(err) {
+        if (err) { return done(err, false); }
+        hasStoredValuesToday(function(err, hasStoredValues) {
+          if (err) { return done(err, false); }
+          var didStoreValues = hadStoredValues == false && hasStoredValues == true;
+          done(null, didStoreValues);
+        });
+      });
+    });
   });
 }
 
@@ -124,11 +133,6 @@ function storePrognoses(pollenEntry, city, done) {
           }
         })
         .spread(function(prognose, prognoseCreated) {
-          if (prognoseCreated) {
-            var notifier = new Notifier();
-            notifier.sendNotification();
-          }
-
           prognose.update({ text: pollenEntry.prognose })
                     .then(function() { done() })
                     .catch(done);
@@ -161,6 +165,18 @@ function storeValue(pollenEntry, rawPollenType, city, pollenType, done) {
                      .then(function() { done() })
                      .catch(done);
         }).catch(done);
+}
+
+function hasStoredValuesToday(done) {
+  var date = moment().format('YYYY-MM-DD');
+  var query = 'select count(id) from "PollenValues" where to_char(created_at, \'YYYY-MM-DD\') = ?;';
+  models.sequelize.query(query, {
+    replacements: [ date ]
+  }).spread(function(results, metadata) {
+    done(null, results[0]['count'] > 0);
+  }).catch(function(err) {
+    done(err, null)
+  });
 }
 
 module.exports = PollenStore;
