@@ -2,6 +2,8 @@
 
 Atju is a project for monitoring pollen readings in Denmark. Data is obtained from DMI. The application polls DMI for new pollen readins and stores them in a database. The readings are exposed through a tiny API.
 
+![](https://raw.githubusercontent.com/simonbs/atju-backend/master/icon.png)
+
 ## Installation
 
 Follow the steps below in order to install the backend.
