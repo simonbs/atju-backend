@@ -13,7 +13,8 @@ var sequelize = new Sequelize(config.url, {
   logging: false,
   define: {
     underscored: true
-  }
+  },
+  timezone: 'CET'
 });
 
 fs.readdirSync(__dirname)
