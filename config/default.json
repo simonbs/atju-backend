@@ -4,6 +4,7 @@
   },
   "notifications": {
     "new_available": "Dagens pollental er tilgængelige.",
+    "prognoses_unavailable": "Der er desværre ikke en prognose tilgængelig for i dag.",
     "urban_airship": {
       "api_key": "",
       "api_secret": "",

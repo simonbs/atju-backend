@@ -3,13 +3,29 @@ var UA = require("urban-airship");
 
 function Notifier() {}
 
+Notifier.prototype.sendPrognosesUnavailableNotification = function(done) {
+  this.sendNotificationWithMessage(config.notifications.prognoses_unavailable, done);
+}
+
 Notifier.prototype.sendNewReadingsNotification = function(done) {
   this.sendNotificationWithMessage(config.notifications.new_available, done);
 }
 
 Notifier.prototype.sendNotificationWithMessage = function(msg, done) {
+  this.sendNotificationWithMessageToAudience(msg, "all", done);
+}
+
+Notifier.prototype.sendNotificationWithMessageToTag = function(msg, tag, done) {
+  this.sendNotificationWithMessageToAudience(msg, { "tag": tag }, done);
+}
+
+Notifier.prototype.sendNotificationWithMessageToAudience = function(msg, audience, done) {
+  if (!msg || msg.length == 0) {
+    return done();
+  }
+  
   var payload = {
-    "audience": "all",
+    "audience": audience,
     "notification": {
       "alert": msg,
       "ios": {
