@@ -17,12 +17,7 @@ models.sequelize.sync().then(function() {
   var port = process.env.PORT || 8080;
   app.listen(port);
   console.log('Listening on port ' + port + '...');
-
-  if (process.env.NODE_ENV && process.env.NODE_ENV != 'development') {
-    var jobs = new Jobs();
-    jobs.start();
-  } else {
-    console.log('Not starting jobs in environment: ' + process.env.NODE_ENV + '.');
-  }
+  var jobs = new Jobs();
+  jobs.start();
 });
 
