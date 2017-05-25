@@ -8,10 +8,14 @@ app.use('/dmi', dmi);
 
 // Page not found.
 app.use(function(req, res, next) {
-  res.status(404).send({
+  res.status(404).json({
     error: 'Resource not found.'
   });
 });
+
+app.get('/', (function(req, res) {
+  res.send('atju-backend is running.')
+})
 
 models.sequelize.sync().then(function() {
   var port = process.env.PORT || 8080;
