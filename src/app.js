@@ -14,8 +14,8 @@ app.use(function(req, res, next) {
 });
 
 app.get('/', (function(req, res) {
-  res.send('atju-backend is running.')
-})
+  res.send('atju-backend is running.');
+}));
 
 models.sequelize.sync().then(function() {
   var port = process.env.PORT || 8080;
