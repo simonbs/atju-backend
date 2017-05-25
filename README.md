@@ -13,8 +13,11 @@ You can deploy to Heroku by pressing the above button or you can deploy manually
 1. Install the necessary dependencies by running `npm install`.
 2. Make sure that you have PostgreSQL running. 
 3. Create a database named "atju". The database can typically be created by running `createdb atju`.
-4. Copy `config/default.json` to `config/local.json` and modify the values as necessary.
-5. If you wish to receive a notification whenever new pollen readings are available, register on Urban Airship and follow their guides on creating production and development applications. Enter the necessary keys in `config/local.json`.
+4. Modofy `config/default.json` as necessary.
+5. Set the environment variable `DATABASE_URL` to the a URL pointing to your PostgreSQL database.
+6. Set the environment variable `URBAN_AIRSHIP_APP_KEY` to the Urban Airshp app key.
+6. Set the environment variable `URBAN_AIRSHIP_APP_SECRET` to the Urban Airshp app secret.
+6. Set the environment variable `URBAN_AIRSHIP_MASTER_SECRET` to the Urban Airshp master secret.
 
 You can configure the application to use another database (e.g. MySQL or SQLite) by modifiying `config/local.json`.
 
