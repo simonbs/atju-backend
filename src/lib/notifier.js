@@ -43,15 +43,19 @@ Notifier.prototype.sendNotification = function(payload, done) {
   var apiMasterKey = process.env.URBAN_AIRSHIP_MASTER_SECRET;  
   if (!apiKey || apiKey.length == 0 || !apiSecret || apiSecret.length == 0 || !apiMasterKey || apiMasterKey.length == 0) {
     // Don't do anything if not configured to send notifications.
+    console.log('Notifications are not configured')
     return done();
   }
 
   var ua = new UA(apiKey, apiSecret, apiMasterKey);
+  console.log('Will send notification')
+  console.log(payload)
   ua.pushNotification("/api/push/", payload, function(err) {
     if (err) {
       console.log('Unable to send push notification: ' + err);
     }
     if (done != null) {
+      console.log('Did send notification')
       done(err);
     }
   });
