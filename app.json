@@ -1,0 +1,19 @@
+{
+  "name": "atju-backend",
+  "description": "Polls for pollen readings from DMI and stores them.",
+  "repository": "https://github.com/simonbs/atju-backend",
+  "logo": "https://github.com/simonbs/atju-backend/raw/master/icon.png",
+  "keywords": [ "pollen", "grass", "allergy", "atju", "sneeze", "summer" ],
+  "addons": [ "heroku-postgresql" ],
+  "env": {
+    "URBAN_AIRSHIP_APP_KEY": {
+      "description": "App key for Urban Airship."
+    },
+    "URBAN_AIRSHIP_APP_SECRET": {
+      "description": "App secret for Urban Airship"
+    },
+    "URBAN_AIRSHIP_MASTER_SECRET": {
+      "description": "Master secret for Urban Airship"
+    }
+  }
+}
