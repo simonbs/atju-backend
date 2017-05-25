@@ -1,2 +1,3 @@
-var config = require('config');
-module.exports = config.database;
+module.exports = {
+  url: process.env.DATABASE_URL
+}

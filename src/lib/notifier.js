@@ -38,9 +38,9 @@ Notifier.prototype.sendNotificationWithMessageToAudience = function(msg, audienc
 }
 
 Notifier.prototype.sendNotification = function(payload, done) {
-  var apiKey = config.notifications.urban_airship.api_key;
-  var apiSecret = config.notifications.urban_airship.api_secret;
-  var apiMasterKey = config.notifications.urban_airship.api_master_key;  
+  var apiKey = process.env.URBAN_AIRSHIP_API_KEY;
+  var apiSecret = process.env.URBAN_AIRSHIP_API_SECRET;
+  var apiMasterKey = process.env.URBAN_AIRSHIP_MASTER_SECRET;  
   if (!apiKey || apiKey.length == 0 || !apiSecret || apiSecret.length == 0 || !apiMasterKey || apiMasterKey.length == 0) {
     // Don't do anything if not configured to send notifications.
     return done();
