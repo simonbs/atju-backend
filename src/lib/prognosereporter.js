@@ -15,7 +15,8 @@ PrognoseReporter.prototype.report = function(done) {
     } else {
       // Prognoses are available.
       async.forEach(results, function(result, callback) {
-        notifier.sendNotificationWithMessageToTag(result['text'], result['city'], callback);
+        var prognose = capitalizeFirstLetter(removeCommaAfterYear(removeTomorrowPrefix(result['text'])))
+        notifier.sendNotificationWithMessageToTag(prognose, result['city'], callback);
       }, done);
     }
   });
@@ -33,6 +34,21 @@ function getPrognosesFromYesterday(done) {
   }).catch(function(err) {
     done(err, null)
   });
+}
+
+function removeTomorrowPrefix(str) {
+    return str.replace(/^For i morgen,? /i, "")
+}
+
+function removeCommaAfterYear(str) {
+    return str.replace(/\d{4}(,) /, "")
+  }
+
+function capitalizeFirstLetter(str) {
+  if (str.length == 0) {
+    return str
+  }
+  return str.charAt(0).toUpperCase() + str.slice(1)
 }
 
 module.exports = PrognoseReporter;
