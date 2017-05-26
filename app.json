@@ -4,7 +4,7 @@
   "repository": "https://github.com/simonbs/atju-backend",
   "logo": "https://github.com/simonbs/atju-backend/raw/master/icon.png",
   "keywords": [ "pollen", "grass", "allergy", "atju", "sneeze", "summer" ],
-  "addons": [ "heroku-postgresql", "heroku-scheduler" ],
+  "addons": [ "heroku-postgresql", "scheduler" ],
   "env": {
     "URBAN_AIRSHIP_APP_KEY": {
       "description": "App key for Urban Airship."
