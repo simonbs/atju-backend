@@ -19,6 +19,13 @@ You can deploy to Heroku by pressing the above button or you can deploy manually
 6. Set the environment variable `URBAN_AIRSHIP_APP_SECRET` to the Urban Airshp app secret.
 6. Set the environment variable `URBAN_AIRSHIP_MASTER_SECRET` to the Urban Airshp master secret.
 
+### Configuring tasks
+
+If you deployed to Heroku, you'll want to add the following two tasks to Heroku Scheduler, otherwise you'll want to configure the two tasks as cronjobs.
+
+1. Run `npm run refresh` to check for new pollen readings. Doing this every hour should be sufficient. This will also notify the users when new readings become available in their area.
+2. If you want to receive the prognose for a a day, run `npm run sendprognose` at the time you wish to receive the prognose, e.g. at 7 in the morning.
+
 ## Running the application
 
 Run the app in a development environment using `npm run start-dev` and in a production environment using `npm start`.
