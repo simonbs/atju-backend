@@ -1,3 +1,4 @@
+require('dotenv').config()
 var models = require('../src/models');
 var Refresher = require('../src/lib/refresher');
 

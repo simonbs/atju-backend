@@ -1,3 +1,4 @@
+require('dotenv').config()
 var models = require('../src/models');
 var PrognoseReporter = require('../src/lib/prognosereporter');
 
