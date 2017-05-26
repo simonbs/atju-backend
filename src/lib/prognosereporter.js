@@ -9,7 +9,7 @@ function PrognoseReporter() { }
 PrognoseReporter.prototype.report = function(done) {
   var notifier = new Notifier();
   getPrognosesFromYesterday(function(err, results) {
-    if (!results || results.count == 0) {
+    if (!results || results.length == 0) {
       // No prognoses available.
       notifier.sendPrognosesUnavailableNotification(done);
     } else {
