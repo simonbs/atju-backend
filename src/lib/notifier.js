@@ -3,23 +3,19 @@ var UA = require("urban-airship");
 
 function Notifier() {}
 
-Notifier.prototype.sendPrognosesUnavailableNotification = function(done) {
-  this.sendNotificationWithMessage(config.notifications.prognoses_unavailable, done);
+Notifier.prototype.sendPrognose = function(prognose, tag, done) {
+  this.send(prognose, { "tag": tag }, true, done)
 }
 
-Notifier.prototype.sendNewReadingsNotification = function(done) {
-  this.sendNotificationWithMessage(config.notifications.new_available, done);
+Notifier.prototype.sendPrognosesUnavailable = function(done) {
+  this.send(config.notifications.prognoses_unavailable, "all", false, done)
 }
 
-Notifier.prototype.sendNotificationWithMessage = function(msg, done) {
-  this.sendNotificationWithMessageToAudience(msg, "all", done);
+Notifier.prototype.sendNewReadings = function(done) {
+  this.send(config.notifications.new_available, "all", true, done)
 }
 
-Notifier.prototype.sendNotificationWithMessageToTag = function(msg, tag, done) {
-  this.sendNotificationWithMessageToAudience(msg, { "tag": tag }, done);
-}
-
-Notifier.prototype.sendNotificationWithMessageToAudience = function(msg, audience, done) {
+Notifier.prototype.send = function(msg, audience, isContentAvailable, done) {
   if (!msg || msg.length == 0) {
     return done();
   }
@@ -29,7 +25,8 @@ Notifier.prototype.sendNotificationWithMessageToAudience = function(msg, audienc
     "notification": {
       "alert": msg,
       "ios": {
-        "sound": "default"
+        "sound": "default",
+        "content-available": isContentAvailable ? 1 : 0
       }
     },
     "device_types" : "all"
@@ -43,19 +40,18 @@ Notifier.prototype.sendNotification = function(payload, done) {
   var apiMasterKey = process.env.URBAN_AIRSHIP_MASTER_SECRET;  
   if (!apiKey || apiKey.length == 0 || !apiSecret || apiSecret.length == 0 || !apiMasterKey || apiMasterKey.length == 0) {
     // Don't do anything if not configured to send notifications.
-    console.log('Notifications are not configured')
+    console.log("Notifications are not configured")
     return done();
   }
 
   var ua = new UA(apiKey, apiSecret, apiMasterKey);
-  console.log('Will send notification')
-  console.log(payload)
   ua.pushNotification("/api/push/", payload, function(err) {
     if (err) {
-      console.log('Unable to send push notification: ' + err);
+      console.log("Unable to send push notification: " + err);
     }
     if (done != null) {
-      console.log('Did send notification')
+      console.log("Sent notification:")
+      console.log(payload)
       done(err);
     }
   });

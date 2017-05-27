@@ -9,7 +9,7 @@ Refresher.prototype.refresh = function(done) {
     if (err) { return done(err); }
     if (didAddNewValues) {
       var notifier = new Notifier();      
-      notifier.sendNewReadingsNotification(done);
+      notifier.sendNewReadings(done);
     } else {
       done(err);
     }

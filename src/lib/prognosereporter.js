@@ -11,12 +11,12 @@ PrognoseReporter.prototype.report = function(done) {
   getPrognosesFromYesterday(function(err, results) {
     if (!results || results.length == 0) {
       // No prognoses available.
-      notifier.sendPrognosesUnavailableNotification(done);
+      notifier.sendPrognosesUnavailable(done);
     } else {
       // Prognoses are available.
       async.forEach(results, function(result, callback) {
-        var prognose = capitalizeFirstLetter(removeCommaAfterYear(removeTomorrowPrefix(result['text'])))
-        notifier.sendNotificationWithMessageToTag(prognose, result['city'], callback);
+        var msg = capitalizeFirstLetter(removeCommaAfterYear(removeTomorrowPrefix(result['text'])))
+        notifier.sendPrognose(msg, result['city'], callback);
       }, done);
     }
   });
